@@ -1,29 +1,40 @@
-<div class="review" itemprop="reviews" itemscope itemtype="http://schema.org/Review">
-  <span class="reviews-rating" title="<%= txt_stars(review.rating) %>">
-    <%= render 'spree/reviews/stars', stars: review.rating %>
-  </span>
-  <span itemprop="name"><%= review.title %></span>
-  <br/>
-  <span class="attribution"><%= Spree.t(:submitted_on) %>
-    <strong><%= l review.created_at.to_date %></strong>
-  </span>
-  <span itemprop="datePublished" content="<%= review.created_at.to_date.to_s %>"></span>
-  <span itemprop="reviewRating" content="<%= review.rating %>"></span>
-  <% if review.show_identifier %>
-    <% if Spree::Reviews::Config[:show_email] && review.user %>
-      <span itemprop="author"><%= review.user.email %></span>
-    <% else %>
-      <span itemprop="author"><%= review.name %></span>
-    <% end %>
-  <% else %>
-    <span itemprop="author"><%= Spree.t(:anonymous) %></span>
-  <% end %>
-  <div itemprop="reviewBody">
-    <%= simple_format(review.review) %>
+<div class='single-review d-flex border-bottom py-4' itemprop='reviews' itemscope itemtype='http://schema.org/Review'>
+  <div class='review-left mr-4'>
+    <div class='review-placeholder font-weight-semibold text-center text-white rounded-circle position-relative'>
+      <%= review.name[0].upcase %>
+    </div>
   </div>
+  <div class='review-right'>
+    <% if review.show_identifier %>
+      <% if Spree::Reviews::Config[:show_email] && review.user %>
+        <p class='font-weight-bold review-author mb-1' itemprop="author"><%= review.user.email %></p>
+      <% else %>
+        <p class='font-weight-bold review-author mb-1' itemprop="author"><%= review.name %></p>
+      <% end %>
+    <% else %>
+      <p class='font-weight-bold review-author mb-1' itemprop="author"><%= Spree.t(:anonymous) %></p>
+    <% end %>
+    <div class='star-rating' title="<%= txt_stars(review.rating) %>">
+      <%= render 'spree/reviews/stars', stars: review.rating %>
+    </div>
+    <div class='review-content mt-5'>
+      <p class='font-weight-bold' itemprop='name'><%= review.title %></p>
+      <p class='font-weight-normal attribution'><%= Spree.t(:submitted_on) %>
+        <strong><%= review.created_at.to_date %></strong>
+      </p>
+      <p itemprop='reviewBody'><%= simple_format(review.review) %></p>
+      <span itemprop="datePublished" content="<%= review.created_at.to_date.to_s %>"></span>
+      <span itemprop="reviewRating" content="<%= review.rating %>"></span>
+    </div>
+    <div class='share-btn'>
+      <span class='fas fa-share-alt share-icon'></span>
+      <span class='share'>Share</span>
+    </div>
+
   <% if Spree::Reviews::Config[:feedback_rating] && (!Spree::Reviews::Config[:require_login] || spree_current_user) %>
     <div class="feedback_review" id="feedback_review_<%= review.id %>">
       <%= render 'spree/feedback_reviews/form', review: review %>
     </div>
   <% end %>
+  </div>
 </div>
