@@ -1,33 +1,46 @@
 <section class='product-reviews-section py-5 mt-5 bg-light'>
-  <%= link_to Spree.t(:write_your_own_review), 'javascript:void(0);', onclick: "$('.post-review').removeClass('d-none');", class: 'nav-item nav-link font-weight-bold text-center text-dark', rel: 'nofollow' %>
-  <div class='container post-review d-none'>
-    <p id='error-message'></p>
-    <%= render 'spree/reviews/form', review: Spree::Review.new, product: @product %>
-  </div>
-  <div class='container review-listing'>
-    <nav>
-      <div class='nav nav-tabs'>
-        <a class='nav-item nav-link active font-weight-bold text-center text-dark' data-toggle='tab' href='#reviews'>
-          <%= Spree.t(:reviews) %>
-        </a>
-        <a class='nav-item nav-link font-weight-bold text-center text-dark' data-toggle='tab' href='#questions'>
-          Questions
-        </a>
+  <div class ='container'>
+    <div class="d-flex justify-content-between">
+      <p id='success-message' class="text-tertiary"></p>
+      <a class= 'btn btn-sm btn-secondary py-2 px-3' id="write-review" href="javascript:void(0);" onclick= "writeReview()" rel= 'nofollow'>
+        <span class="fas fa-edit"></span>
+        <%= Spree.t(:write_your_own_review) %>
+      </a>
+    </div>
+
+    <div class='post-review d-none py-4'>
+      <h3 class="mb-1">Write a Review</h3>
+      <hr class="border-dark border-2">
+      <p id='error-message' class="text-danger"></p>
+      <div class="py-4">
+        <%= render 'spree/reviews/form', review: Spree::Review.new, product: @product %>
       </div>
-    </nav>
-    <div class='tab-content'>
-      <div class='tab-pane fade show active' id='reviews'>
-        <% if Spree::Reviews::Config[:include_unapproved_reviews] == false and @product.reviews.approved.count == 0 %>
-          <p class="reviews-none"><%= Spree.t(:no_reviews_available) %></p>
-        <% else %>
-          <%#= render 'spree/shared/rating', product: @product, review: 0 %>
-          <% for review in (Spree::Reviews::Config[:track_locale] ? @product.reviews.localized(I18n.locale) : @product.reviews).default_approval_filter.preview %>
-            <%= render 'spree/shared/review', review: review %>
+    </div>
+    <div class='review-listing'>
+      <nav>
+        <div class='nav nav-tabs'>
+          <a class='nav-item nav-link active font-weight-bold text-center text-dark' data-toggle='tab' href='#reviews'>
+            <%= Spree.t(:reviews) %>
+          </a>
+          <a class='nav-item nav-link font-weight-bold text-center text-dark' data-toggle='tab' href='#questions'>
+            Questions
+          </a>
+        </div>
+      </nav>
+      <div class='tab-content'>
+        <div class='tab-pane fade show active' id='reviews'>
+          <% if Spree::Reviews::Config[:include_unapproved_reviews] == false and @product.reviews.approved.count == 0 %>
+            <p class="reviews-none py-4"><%= Spree.t(:no_reviews_available) %></p>
+          <% else %>
+            <%#= render 'spree/shared/rating', product: @product, review: 0 %>
+            <% for review in (Spree::Reviews::Config[:track_locale] ? @product.reviews.localized(I18n.locale) : @product.reviews).default_approval_filter.preview %>
+              <%= render 'spree/shared/review', review: review %>
+            <% end %>
           <% end %>
-        <% end %>
-      </div>
-      <div class='tab-pane fade' id='questions'>
-        <p>Some content for questions</p>
+        </div>
+        <div class='tab-pane fade' id='questions'>
+          <p class="py-4">Some content for questions</p>
+        </div>
       </div>
     </div>
   </div>
