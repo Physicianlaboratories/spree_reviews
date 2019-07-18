@@ -1,6 +1,3 @@
-//= require spree/frontend
-//= require spree/frontend/spree_auth
-
 // Initialize
 function Review(inputs) {
   for (var key in inputs){
@@ -10,6 +7,11 @@ function Review(inputs) {
 
 function elementExist(element){
   return (typeof element != 'undefined' && element != null)
+}
+
+function writeReview(){
+  document.getElementsByClassName('post-review')[0].classList.remove('d-none');
+  document.getElementById('success-message').innerHTML = '';
 }
 
 Review.prototype.onLoad = function () {
@@ -26,11 +28,19 @@ Review.prototype.formHandler = function () {
 
       if (xhr.status == 401){
         response = xhr.responseText;
-        document.getElementById('error-message').innerHTML = response
+        document.getElementById('error-message').innerHTML = "Something went wrong"
       }
       else {
-        reviewContainer = document.getElementsByClassName('post-review')
-        reviewContainer[0].classList.add('d-block')
+        response = JSON.parse(xhr.responseText);
+        if (response["error"]) {
+          document.getElementById('error-message').innerHTML = response["error"];
+        }
+        else if (response["success"]){
+          reviewContainer = document.getElementsByClassName('post-review');
+          reviewContainer[0].classList.add('d-none');
+          document.getElementById('error-message').innerHTML = '';
+          document.getElementById('success-message').innerHTML = response["success"];
+        }
       }
     })
   }

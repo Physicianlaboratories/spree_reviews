@@ -1,7 +1,7 @@
 <% if defined? edit_enabled
     state = ''
     name  = 'review[rating]'
-    extraClass = 's-edit'
+    extraClass = 's-edit lead'
   else
     state = 'disabled'
     name  = defined?(review).nil? ? Time.now.tv_usec.to_s : "review_#{review}"

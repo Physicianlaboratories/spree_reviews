@@ -24,10 +24,25 @@ class Spree::ReviewsController < Spree::StoreController
 
     authorize! :create, @review
     if @review.save
-      flash[:notice] = Spree.t(:review_successfully_submitted)
-      redirect_to spree.product_path(@product)
+      respond_to do |format|
+        format.html do
+          flash[:notice] = Spree.t(:review_successfully_submitted)
+          redirect_to spree.product_path(@product)
+        end
+        format.js do
+          render json: { success: Spree.t(:review_successfully_submitted) }
+        end
+      end
     else
-      render :new
+      error = @review.errors.full_messages.join('. ')
+      respond_to do |format|
+        format.html do
+          render :new
+        end
+        format.js do
+          render json: { error: error }
+        end
+      end
     end
   end
 
